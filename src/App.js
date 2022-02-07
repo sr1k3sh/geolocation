@@ -58725,10 +58725,37 @@ function App() {
           details.innerHTML += `<div><strong>${roundedDistance} miles away</strong></div>`;
         }
 
+        link.addEventListener('click', function () {
+          for (const feature of schools.features) {
+            if (this.id === `link-${feature.id}`) {
+              flyToStore(feature);
+              createPopUp(feature);
+            }
+          }
+          const activeItem = document.getElementsByClassName('active');
+          if (activeItem[0]) {
+            activeItem[0].classList.remove('active');
+          }
+          this.parentNode.classList.add('active');
+        });
+
       }
     }
   }
 
+  function flyToStore(currentFeature) {
+    map.current.flyTo({
+      center: currentFeature.geometry.coordinates[0][0],
+      zoom: 15
+    });
+  }
+
+  function createPopUp(currentFeature) {
+    new mapboxgl.Popup()
+      .setLngLat(currentFeature.geometry.coordinates[0][0])
+      .setHTML(currentFeature.properties.name?currentFeature.properties.name:'no name')
+      .addTo(map.current);
+  }
   useEffect(() => {
     if (map.current) return; // initialize map only once
 
@@ -58831,10 +58858,10 @@ function App() {
             while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                 coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
             }
-  
+
             new mapboxgl.Popup()
               .setLngLat(coordinates)
-              .setHTML(description)
+              .setHTML(description?description:'no name')
               .addTo(map.current);
     
         });
@@ -58851,9 +58878,12 @@ function App() {
 
       });
     });
+    
+    return()=>{
 
-  });
-
+    }
+  },[]);
+  
   return (
     <div className="App">
       <div>

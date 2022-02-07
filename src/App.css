@@ -63,7 +63,7 @@
 
 }
 .item:hover{
-  background: #8080806b;
+  background: #abedd76b;
 }
 
 .item a{
@@ -76,7 +76,10 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
 
+.item:hover a{
+  color: greenyellow;
 }
 
 .item .sub-title{
