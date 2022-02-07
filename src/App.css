@@ -36,3 +36,51 @@
     transform: rotate(360deg);
   }
 }
+
+
+.map-container {
+  height: 100vh;
+}
+
+.listings{
+  position: absolute;
+  left: 0;
+  top:0;
+  z-index: 1;
+  background: #2a232378;
+  /* padding: 1rem; */
+  height: 100vh;
+  overflow: auto;
+  backdrop-filter: blur(8px);
+}
+
+.item{
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+
+}
+.item:hover{
+  background: #8080806b;
+}
+
+.item a{
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  max-width: 240px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+}
+
+.item .sub-title{
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #fff;
+}
