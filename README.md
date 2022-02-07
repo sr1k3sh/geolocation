@@ -1,6 +1,6 @@
 # mapbox app
 
-![alt text](./src/screenshot.png)
+![alt text](./src/screenshot1.png)
 
 Mapbox app to show school around kathmandu valley
 
