@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+*{
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 .App {
   text-align: center;
 }
@@ -49,6 +54,8 @@
   z-index: 1;
   background: #2a232378;
   /* padding: 1rem; */
+  padding: 0;
+  margin: 0;
   height: 100vh;
   overflow: auto;
   backdrop-filter: blur(8px);
@@ -60,13 +67,14 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 
 }
 .item:hover{
-  background: #abedd76b;
+  background: #ffffff6b;
 }
 
-.item a{
+.item .title{
   text-decoration: none;
   color: #fff;
   font-weight: bold;
@@ -78,12 +86,58 @@
   overflow: hidden;
 }
 
-.item:hover a{
-  color: greenyellow;
+.item:hover .title{
+  color: #0006ff;
 }
 
 .item .sub-title{
   font-weight: 500;
   font-size: 0.875rem;
   color: #fff;
+}
+
+.radio-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  gap: 1rem;
+  left: 50%;
+  top: 1%;
+  z-index: 1;
+  background: #2a232378;
+  padding: 1rem;
+  border-radius: 6px;
+  backdrop-filter: blur(16px);
+  transform: translateX(-50%);
+}
+
+.radio-wrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.radio-wrapper > input[type="radio"]{
+  margin: 0;
+  margin-right: 5px;
+}
+.radio-wrapper > label{
+  color: #fff;
+}
+.radio-wrapper > input , .radio-wrapper > label{
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.float-count{
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  background: #fff;
+  z-index: 1;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.875rem;
 }

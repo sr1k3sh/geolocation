@@ -1,14 +1,19 @@
 import logo from './school.png';
 import './App.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicjFrM3NoIiwiYSI6ImNrdGp5Nmx5cDFnczAzMnJ0OHMwaDEwbWkifQ.E2jcYVFQPA6IJ9xLQ4A7sw';
 
 function App() {
+
   const mapContainer = useRef(null);
   const map = useRef(null);
+
+  const [radioVal, setRadioVal] = useState("all");
+
+  const [data, setData] = useState([]);
 
   const schools = {
     'type': 'FeatureCollection',
@@ -58695,12 +58700,11 @@ function App() {
   }
 
   function buildLocationList(schools) {
-
-    for (const school of schools.features) {
+    for (const school of schools) {
       if(school.properties.name){
         /* Add a new listing section to the sidebar. */
         const listings = document.getElementById('listings');
-        const listing = listings.appendChild(document.createElement('div'));
+        const listing = listings.appendChild(document.createElement('li'));
         /* Assign a unique `id` to the listing. */
         listing.id = `listing-${school.id}`;
         /* Assign the `item` class to each listing for styling. */
@@ -58756,9 +58760,12 @@ function App() {
       .setHTML(currentFeature.properties.name?currentFeature.properties.name:'no name')
       .addTo(map.current);
   }
-  useEffect(() => {
-    if (map.current) return; // initialize map only once
 
+  useEffect(() => {
+
+    setData(schools.features);
+
+    if (map.current) return; // initialize map only once
     
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
@@ -58788,8 +58795,7 @@ function App() {
         if (error) throw error;
         map.current.addImage('custom-marker', image);
 
-
-        buildLocationList(schools);
+        // buildLocationList(schools.features);
 
         map.current.addSource('places', {
             // This GeoJSON contains features that include an "icon"
@@ -58883,11 +58889,103 @@ function App() {
 
     }
   },[]);
+
+  const onClickList = function(e){
+    e.preventDefault();
+    for (const feature of data) {
+      if (e.currentTarget.id === `listing-${feature.id}`) {
+        flyToStore(feature);
+        createPopUp(feature);
+      }
+    }
+    const activeItem = document.getElementsByClassName('active');
+    if (activeItem[0]) {
+      activeItem[0].classList.remove('active');
+    }
+    e.currentTarget.parentNode.classList.add('active');
+  }
   
+  const onChangeRadio = (e) =>{
+    setRadioVal(e.target.value);
+
+    let tempdata = []
+    switch (e.target.value) {
+      case 'all':
+        tempdata = schools.features;
+        break;
+
+      case 'primary':
+        tempdata = schools.features.filter(d=>d.properties["isced:level"]==="primary");
+      break;
+
+      case 'secondary':
+        tempdata = schools.features.filter(d=>d.properties["isced:level"]==="secondary");
+      break;
+
+      case 'lower_secondary':
+        tempdata = schools.features.filter(d=>d.properties["isced:level"]==="lower_secondary");
+        break;
+
+      case "higher_secondary":
+        tempdata = schools.features.filter(d=>d.properties["isced:level"]==="higher_secondary");
+        break;
+
+      case 'college':
+        tempdata = schools.features.filter(d=>d.properties["isced:level"]==="college");
+      break;
+
+      default:
+        tempdata = schools.features;
+        break;
+    }
+
+    schools.features = tempdata;
+
+    setData(tempdata);
+    map.current?.getSource('places').setData(schools);
+  }
+
   return (
     <div className="App">
       <div>
-        <div id="listings" className="listings"></div>
+        <div className='radio-container'>
+          <div className='radio-wrapper'>
+            <input type='radio' id="radio_all" onChange={onChangeRadio} name="radio" value="all" defaultChecked></input>
+            <label htmlFor="radio_all">all</label>
+          </div>
+          <div className='radio-wrapper'>
+            <input type='radio' id="radio_primary" onChange={onChangeRadio} name="radio" value="primary"></input>
+            <label htmlFor="radio_primary">primary</label>
+          </div>
+          <div className='radio-wrapper'>
+            <input type='radio' id="radio_lower" name="radio" onChange={onChangeRadio} value="lower_secondary" ></input>
+            <label htmlFor="radio_lower">lower_secondary</label>
+          </div>
+          <div className='radio-wrapper'>
+            <input type='radio' id="radio_secondary" name="radio" onChange={onChangeRadio} value="secondary" ></input>
+            <label htmlFor="radio_secondary">secondary</label>
+          </div>
+          <div className='radio-wrapper'>
+            <input type='radio' id="radio_higher" name="radio" onChange={onChangeRadio} value="higher_secondary" ></input>
+            <label htmlFor="radio_higher">higher_secondary</label>
+          </div>
+          <div className='radio-wrapper'>
+            <input type='radio' id="radio_college" onChange={onChangeRadio} name="radio" value="college"></input>
+            <label htmlFor="radio_college">college</label>
+          </div>
+        </div>
+
+        <span className='float-count'>Numbers of results: {data.length}</span>
+        <ul id="listings" className="listings">
+          {
+            data.length && data.map((d,i)=><React.Fragment>
+              <li key={"test"+i} id={"listing-"+d.id} className='item' onClick={e=>onClickList(e)}>
+                <span key={"title"+i} className='title' id={"link-"+d.id}>{d.properties.name}</span>
+                <span key={"sub-title"+i} className='sub-title'>{d.properties.phone?d.properties.phone:'no number'}</span>
+              </li>
+            </React.Fragment>)
+          }
+        </ul>
         <div ref={mapContainer} className="map-container"></div>
         </div>
     </div>
