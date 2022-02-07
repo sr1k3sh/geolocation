@@ -1,6 +1,12 @@
-# Getting Started with Create React App
+# mapbox app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![alt text](./src/screenshot.png)
+
+Mapbox app to show school around kathmandu valley
+
+## Used stack
+
+openstreetmap/react/mapboxgl
 
 ## Available Scripts
 
