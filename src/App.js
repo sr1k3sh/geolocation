@@ -175,6 +175,8 @@ function App() {
   const onChangeRadio = (e) =>{
 
     let tempdata = []
+    let tempSchool = {};
+
     switch (e.target.value) {
       case 'all':
         tempdata = schools.features;
@@ -205,10 +207,12 @@ function App() {
         break;
     }
 
-    schools.features = tempdata;
+    tempSchool.type = "FeatureCollection";
 
-    setData(tempdata);
-    map.current?.getSource('places').setData(schools);
+    tempSchool.features = tempdata;
+
+    setData(tempSchool.features);
+    map.current?.getSource('places').setData(tempSchool);
   }
 
   return (
